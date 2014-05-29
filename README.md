@@ -15,4 +15,11 @@ Output
 ------
 ![alt tag](https://raw.githubusercontent.com/phil8192/dithering-algorithms/master/lenna-out.png)
 
+Depends on
+----------
+```lisp
+(ql:quickload "png-read")
+(ql:quickload "zpng")
+```
+
 
