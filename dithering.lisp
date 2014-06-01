@@ -1,5 +1,7 @@
-(ql:quickload "png-read")
-(ql:quickload "zpng")
+(with-open-file (*standard-output* "/dev/null" :direction :output
+				   :if-exists :supersede)
+  (ql:quickload "png-read")
+  (ql:quickload "zpng"))
 
 (defpackage :net.parasec.dithering
   (:use :cl)
