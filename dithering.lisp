@@ -1,5 +1,5 @@
-;; (ql:quickload "png-read")
-;; (ql:quickload "zpng")
+(ql:quickload "png-read")
+(ql:quickload "zpng")
 
 (defpackage :net.parasec.dithering
   (:use :cl)
