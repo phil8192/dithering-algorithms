@@ -1,9 +1,15 @@
 ;; (ql:quickload "png-read")
 ;; (ql:quickload "zpng")
 
-(defpackage :dithering
-  (:use :cl))
-(in-package :dithering)
+(defpackage :net.parasec.dithering
+  (:use :cl)
+  (:export :load-png
+	   :greyscale
+	   :transpose
+	   :floyd-steinberg-dithering
+	   :save-png))
+
+(in-package :net.parasec.dithering)
 
 ;; constants for dithering error diffusion filter
 (defconstant +diffusion-e+  7/16 "east pixel")
