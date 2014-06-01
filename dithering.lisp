@@ -9,6 +9,7 @@
 	   :greyscale
 	   :transpose
 	   :floyd-steinberg-dithering
+	   :random-filter
 	   :save-png))
 
 (in-package :net.parasec.dithering)
@@ -110,7 +111,7 @@ y = (0.2126*r) + (0.7152*g) + (0.0722*b)"
 	     (if (< old-pixel 128) #x00 #xFF))
 	   (cond-incf (i j delta)
 	     (and (<= 0 j) (< j cols)
-		 (incf (aref quant-errors i j) delta))))
+		  (incf (aref quant-errors i j) delta))))
       (do ((i 0 (1+ i))
 	   (current-errors 0 (mod (1+ i) 2))
 	   (next-errors 1 (mod i 2)))
@@ -130,6 +131,17 @@ y = (0.2126*r) + (0.7152*g) + (0.0722*b)"
 	    (cond-incf next-errors (1+ j) se-delta)
 	    (setf (aref image-array i j) new-pixel)
 	    (setf (aref quant-errors current-errors j) 0.0d0)))))))
+
+(defun random-filter (array threshold)
+  "randomly convert a black pixel to white given threshold probability.
+the intention is to break up contiguous black regions into a random 
+pattern."
+  (let ((len (array-total-size array))
+	(random-state (make-random-state t)))
+    (dotimes (i len)
+      (when (and (= (row-major-aref array i) #x00) 
+		 (< (random 1.0d0 random-state) threshold))
+	(setf (row-major-aref array i) #xFF)))))
 
 ;;_________________auxiliary functions____________________________
 
@@ -165,7 +177,8 @@ y = (0.2126*r) + (0.7152*g) + (0.0722*b)"
   (let* ((raw-img (load-png "lenna.png"))
 	 (b&w-img (transpose (greyscale raw-img)))
 	 (dithered-img (floyd-steinberg-dithering b&w-img)))
-    (save-png dithered-img :file-location "lenna-out.png")))
+    (random-filter dithered-img 0.0d0)
+    (save-png dithered-img :file-location "out.png")))
   
 
 
